@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="de" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebDev Lern-Kompass – HTML, CSS & JavaScript</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Fredoka', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        brand: {
+                            html: '#f97316',
+                            css: '#3b82f6',
+                            js: '#eab308',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .code-font { font-family: 'Fira Code', monospace; }
+        
+        /* 3D Card Flip CSS */
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        /* Custom Scrollbars */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col font-sans selection:bg-indigo-100 selection:text-indigo-600">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Title -->
+                <div class="flex items-center space-x-3 cursor-pointer group" onclick="switchTab('grundlagen')">
+                    <div class="w-12 h-12 bg-gradient-to-tr from-indigo-500 via-purple-500 to-pink-500 rounded-2xl flex items-center justify-center text-white shadow-md shadow-indigo-200 group-hover:scale-105 transition-transform">
+                        <i data-lucide="sparkles" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-display font-bold text-xl sm:text-2xl text-slate-900 tracking-wide flex items-center gap-2">
+                            WebDev Kompass
+                            <span class="text-xs font-sans font-medium bg-indigo-50 text-indigo-600 border border-indigo-200 px-2.5 py-0.5 rounded-full">Kinderleicht</span>
+                        </h1>
+                        <p class="text-xs text-slate-500 hidden sm:block">HTML, CSS & JavaScript anschaulich verstehen</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Buttons -->
+                <nav class="hidden md:flex space-x-2">
+                    <button id="nav-btn-grundlagen" onclick="switchTab('grundlagen')" class="nav-tab px-5 py-2.5 rounded-xl font-display font-medium text-sm transition-all flex items-center space-x-2 bg-indigo-600 text-white shadow-md shadow-indigo-200">
+                        <i data-lucide="compass" class="w-4 h-4"></i>
+                        <span>🌐 Grundlagen</span>
+                    </button>
+                    <button id="nav-btn-html" onclick="switchTab('html')" class="nav-tab px-5 py-2.5 rounded-xl font-display font-medium text-sm transition-all flex items-center space-x-2 bg-slate-100 text-slate-700 hover:bg-orange-50 hover:text-orange-600">
+                        <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span>
+                        <span>📄 HTML</span>
+                    </button>
+                    <button id="nav-btn-css" onclick="switchTab('css')" class="nav-tab px-5 py-2.5 rounded-xl font-display font-medium text-sm transition-all flex items-center space-x-2 bg-slate-100 text-slate-700 hover:bg-blue-50 hover:text-blue-600">
+                        <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                        <span>🎨 CSS</span>
+                    </button>
+                    <button id="nav-btn-js" onclick="switchTab('js')" class="nav-tab px-5 py-2.5 rounded-xl font-display font-medium text-sm transition-all flex items-center space-x-2 bg-slate-100 text-slate-700 hover:bg-amber-50 hover:text-amber-600">
+                        <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                        <span>⚡ JavaScript</span>
+                    </button>
+                </nav>
+
+                <!-- Learned Counter Badge -->
+                <div class="flex items-center space-x-2 bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl">
+                    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-600"></i>
+                    <span class="text-xs font-bold text-emerald-800"><span id="learned-count">0</span> Gelernt</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Bar -->
+        <div class="md:hidden flex overflow-x-auto border-t border-slate-100 px-3 py-2 space-x-2 custom-scrollbar bg-slate-50">
+            <button id="mob-btn-grundlagen" onclick="switchTab('grundlagen')" class="px-4 py-2 rounded-lg font-display text-xs font-medium whitespace-nowrap bg-indigo-600 text-white">
+                🌐 Grundlagen
+            </button>
+            <button id="mob-btn-html" onclick="switchTab('html')" class="px-4 py-2 rounded-lg font-display text-xs font-medium whitespace-nowrap bg-white border border-slate-200 text-slate-700">
+                📄 HTML
+            </button>
+            <button id="mob-btn-css" onclick="switchTab('css')" class="px-4 py-2 rounded-lg font-display text-xs font-medium whitespace-nowrap bg-white border border-slate-200 text-slate-700">
+                🎨 CSS
+            </button>
+            <button id="mob-btn-js" onclick="switchTab('js')" class="px-4 py-2 rounded-lg font-display text-xs font-medium whitespace-nowrap bg-white border border-slate-200 text-slate-700">
+                ⚡ JavaScript
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- SECTION 1: GRUNDLAGEN (Metaphors & Document Structure) -->
+        <section id="sec-grundlagen" class="space-y-8">
+            
+            <!-- Welcome Hero -->
+            <div class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 rounded-3xl p-6 sm:p-10 text-white shadow-xl relative overflow-hidden">
+                <div class="relative z-10 max-w-3xl space-y-4">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold tracking-wide uppercase">
+                        <i data-lucide="lightbulb" class="w-3.5 h-3.5"></i> Erstes Hintergrundwissen
+                    </span>
+                    <h2 class="font-display text-2xl sm:text-4xl font-extrabold leading-tight">
+                        Wie funktioniert eine Webseite eigentlich?
+                    </h2>
+                    <p class="text-indigo-100 text-sm sm:text-base leading-relaxed">
+                        Eine Webseite zu programmieren ist gar nicht so kompliziert, wie es aussieht! Stell dir vor, du baust ein Traumhaus. Dafür brauchst du genau drei verschiedene Dinge:
+                    </p>
+                </div>
+            </div>
+
+            <!-- The House Metaphor (3 Pillars) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- HTML Card -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-orange-100 shadow-sm hover:shadow-md transition-shadow space-y-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 bg-orange-100 text-orange-600 rounded-2xl flex items-center justify-center font-display font-bold text-2xl group-hover:scale-110 transition-transform">
+                        🏠
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-orange-500">1. Baustein</span>
+                        <h3 class="font-display font-bold text-xl text-slate-900">HTML = Das Rohbau-Skelett</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        HTML zieht die Wände hoch, setzt Türen und Fenster ein und teilt die Räume ein. Es bestimmt, <strong>was</strong> auf der Seite steht: Überschriften, Texte, Bilder und Knöpfe.
+                    </p>
+                    <div class="bg-orange-50 rounded-xl p-3 text-xs text-orange-800 font-medium">
+                        💡 Merkhilfe: Ohne HTML gibt es gar kein Haus!
+                    </div>
+                </div>
+
+                <!-- CSS Card -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-blue-100 shadow-sm hover:shadow-md transition-shadow space-y-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center font-display font-bold text-2xl group-hover:scale-110 transition-transform">
+                        🎨
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-blue-500">2. Baustein</span>
+                        <h3 class="font-display font-bold text-xl text-slate-900">CSS = Einrichtung & Farbe</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        CSS streicht die Wände bunt an, wählt die Schriftart aus, legt Teppiche aus und rückt die Möbel an den richtigen Platz. Es sorgt dafür, dass das Haus <strong>schön aussieht</strong>.
+                    </p>
+                    <div class="bg-blue-50 rounded-xl p-3 text-xs text-blue-800 font-medium">
+                        💡 Merkhilfe: Ohne CSS wäre das Haus grau und kahl!
+                    </div>
+                </div>
+
+                <!-- JS Card -->
+                <div class="bg-white rounded-3xl p-6 border-2 border-amber-100 shadow-sm hover:shadow-md transition-shadow space-y-4 relative overflow-hidden group">
+                    <div class="w-14 h-14 bg-amber-100 text-amber-600 rounded-2xl flex items-center justify-center font-display font-bold text-2xl group-hover:scale-110 transition-transform">
+                        ⚡
+                    </div>
+                    <div>
+                        <span class="text-xs font-bold uppercase tracking-wider text-amber-600">3. Baustein</span>
+                        <h3 class="font-display font-bold text-xl text-slate-900">JavaScript = Die Funktion</h3>
+                    </div>
+                    <p class="text-slate-600 text-sm leading-relaxed">
+                        JavaScript legt Stromkabel, installiert Lichtschalter, die elektrische Türklingel und den Aufzug. Es macht das Haus <strong>lebendig und interaktiv</strong>.
+                    </p>
+                    <div class="bg-amber-50 rounded-xl p-3 text-xs text-amber-800 font-medium">
+                        💡 Merkhilfe: Macht Dinge klickbar und dynamisch!
+                    </div>
+                </div>
+            </div>
+
+            <!-- How HTML starts: Detailed standard document layout -->
+            <div class="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200 shadow-sm space-y-6">
+                <div class="flex items-center space-x-3">
+                    <div class="p-3 bg-indigo-100 text-indigo-600 rounded-2xl">
+                        <i data-lucide="code-2" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-display font-bold text-xl text-slate-900">Wie fängt ein HTML-Code immer an?</h3>
+                        <p class="text-slate-500 text-xs sm:text-sm">Das Grundgerüst, das in fast jeder HTML-Datei an oberster Stelle steht.</p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+                    <!-- Clean Code Display -->
+                    <div class="bg-slate-900 text-slate-100 p-5 rounded-2xl code-font text-xs sm:text-sm leading-relaxed shadow-inner border border-slate-800 overflow-x-auto">
+                        <span class="text-slate-500">&lt;!-- 1. Sagt dem Browser: Das ist modernstes HTML5 --&gt;</span><br>
+                        <span class="text-pink-400">&lt;!DOCTYPE html&gt;</span><br><br>
+                        <span class="text-slate-500">&lt;!-- 2. Startpunkt der gesamten Webseite --&gt;</span><br>
+                        <span class="text-blue-400">&lt;html <span class="text-amber-300">lang</span>=<span class="text-emerald-300">"de"</span>&gt;</span><br><br>
+                        &nbsp;&nbsp;<span class="text-slate-500">&lt;!-- 3. Der Kopf (Kopfdaten, unsichtbar für Besucher) --&gt;</span><br>
+                        &nbsp;&nbsp;<span class="text-blue-400">&lt;head&gt;</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">&lt;meta <span class="text-amber-300">charset</span>=<span class="text-emerald-300">"UTF-8"</span>&gt;</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">&lt;title&gt;</span>Meine erste Webseite<span class="text-blue-400">&lt;/title&gt;</span><br>
+                        &nbsp;&nbsp;<span class="text-blue-400">&lt;/head&gt;</span><br><br>
+                        &nbsp;&nbsp;<span class="text-slate-500">&lt;!-- 4. Der Körper (Alles was man auf der Seite SIEHT) --&gt;</span><br>
+                        &nbsp;&nbsp;<span class="text-blue-400">&lt;body&gt;</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">&lt;h1&gt;</span>Hallo Welt!<span class="text-blue-400">&lt;/h1&gt;</span><br>
+                        &nbsp;&nbsp;&nbsp;&nbsp;<span class="text-blue-400">&lt;p&gt;</span>Das ist mein erster Text.<span class="text-blue-400">&lt;/p&gt;</span><br>
+                        &nbsp;&nbsp;<span class="text-blue-400">&lt;/body&gt;</span><br>
+                        <span class="text-blue-400">&lt;/html&gt;</span>
+                    </div>
+
+                    <!-- Step explanations -->
+                    <div class="space-y-3">
+                        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex gap-3 items-start">
+                            <span class="px-2.5 py-1 bg-indigo-600 text-white font-display text-xs rounded-lg font-bold">1</span>
+                            <div>
+                                <strong class="text-slate-800 text-sm font-display block">&lt;!DOCTYPE html&gt;</strong>
+                                <p class="text-xs text-slate-500">Der Begrüßungs-Befehl für den Internet-Browser (Chrome, Safari, Edge), damit er weiß, wie er die Datei lesen muss.</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex gap-3 items-start">
+                            <span class="px-2.5 py-1 bg-indigo-600 text-white font-display text-xs rounded-lg font-bold">2</span>
+                            <div>
+                                <strong class="text-slate-800 text-sm font-display block">&lt;html&gt; ... &lt;/html&gt;</strong>
+                                <p class="text-xs text-slate-500">Der große Klammer-Behälter. Alles, was zur Webseite gehört, steht zwischen diesen beiden Tags.</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex gap-3 items-start">
+                            <span class="px-2.5 py-1 bg-indigo-600 text-white font-display text-xs rounded-lg font-bold">3</span>
+                            <div>
+                                <strong class="text-slate-800 text-sm font-display block">&lt;head&gt; (Der Kopfbereich)</strong>
+                                <p class="text-xs text-slate-500">Enthält Angaben zum Titel im Browser-Tab oder Einstellungen für Umlaute (ä, ö, ü). Das sieht der Besucher nicht direkt auf der Seite.</p>
+                            </div>
+                        </div>
+                        <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100 flex gap-3 items-start">
+                            <span class="px-2.5 py-1 bg-indigo-600 text-white font-display text-xs rounded-lg font-bold">4</span>
+                            <div>
+                                <strong class="text-slate-800 text-sm font-display block">&lt;body&gt; (Der Körperbereich)</strong>
+                                <p class="text-xs text-slate-500">Der wichtigste Teil! Hier kommen Überschriften, Texte, Knöpfe und Bilder rein.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Button to start with Flashcards -->
+            <div class="text-center py-4">
+                <button onclick="switchTab('html')" class="inline-flex items-center space-x-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-orange-500 to-amber-500 text-white font-display font-bold text-base shadow-lg shadow-orange-200 hover:scale-105 transition-transform">
+                    <span>Jetzt HTML-Lernkarten entdecken</span>
+                    <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- SECTION 2: LERNKARTEN EXPLORER (HTML, CSS, JS) -->
+        <section id="sec-explorer" class="hidden space-y-6">
+            
+            <!-- Filter Bar & Search Controls -->
+            <div class="bg-white rounded-3xl p-5 border border-slate-200 shadow-sm space-y-4">
+                <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
+                    
+                    <!-- Category Indicator & Header -->
+                    <div class="flex items-center space-x-3 w-full md:w-auto">
+                        <div id="cat-icon-bg" class="w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center font-display font-bold text-xl">
+                            📄
+                        </div>
+                        <div>
+                            <h2 id="cat-title" class="font-display font-bold text-xl text-slate-900">HTML Lernkarten</h2>
+                            <p id="cat-subtitle" class="text-xs text-slate-500">Klicke auf eine Karte, um das Live-Beispiel umzuklappen!</p>
+                        </div>
+                    </div>
+
+                    <!-- Search Input -->
+                    <div class="relative w-full md:w-72">
+                        <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="search-input" placeholder="Befehl suchen (z.B. br, color)..." oninput="handleSearch()" class="w-full pl-10 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                    </div>
+                </div>
+
+                <!-- Alphabet Bar -->
+                <div class="border-t border-slate-100 pt-3 flex items-center gap-1 overflow-x-auto custom-scrollbar pb-1">
+                    <span class="text-xs font-bold text-slate-400 mr-2 uppercase tracking-wider">A-Z:</span>
+                    <div id="alphabet-container" class="flex items-center gap-1">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cards Grid Container -->
+            <div id="cards-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Cards inserted dynamically -->
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="empty-state" class="hidden text-center py-16 bg-white rounded-3xl border border-slate-200 space-y-3">
+                <div class="w-16 h-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mx-auto">
+                    <i data-lucide="search-x" class="w-8 h-8"></i>
+                </div>
+                <h3 class="font-display font-bold text-slate-700 text-lg">Keine Lernkarte gefunden</h3>
+                <p class="text-xs text-slate-500">Versuche einen anderen Suchbegriff oder wähle einen anderen Buchstaben.</p>
+                <button onclick="resetFilters()" class="text-xs font-bold text-indigo-600 underline">Filter zurücksetzen</button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="mt-auto border-t border-slate-200 bg-white py-6 text-center text-xs text-slate-500">
+        <div class="max-w-7xl mx-auto px-4">
+            <p class="font-display text-slate-600">WebDev Kompass &bull; Programmieren leicht & verständlich gemacht</p>
+        </div>
+    </footer>
+
+    <script>
+        // Detailed Flashcards Database with over 20 entries per language category
+        const flashcardsData = [
+            // ================= HTML CARDS =================
+            {
+                id: 'html-a',
+                category: 'html',
+                name: '<a>',
+                type: 'Paar-Tag (&lt;a href="..."&gt;...&lt;/a&gt;)',
+                summary: 'Erzeugt einen anklickbaren Internet-Link.',
+                why: 'Das "a" steht für Anchor (Anker). Ohne Links gäbe es kein Internet, weil man nicht von Seite zu Seite springen könnte!',
+                details: 'Mit "href" gibt man die Ziel-Adresse an. Mit target="_blank" öffnet sich die Seite in einem neuen Tab.',
+                code: `<a href="https://wikipedia.org" target="_blank" class="text-blue-600 underline font-semibold">Wikipedia öffnen ↗</a>`
+            },
+            {
+                id: 'html-b',
+                category: 'html',
+                name: '<b> / <strong>',
+                type: 'Paar-Tag (&lt;strong&gt;...&lt;/strong&gt;)',
+                summary: 'Macht Text fett gedruckt.',
+                why: 'Wichtig, um Schlüsselwörter hervorzuheben, damit der Leser sofort sieht, worum es geht.',
+                details: '<strong> ist die moderne Variante, weil sie auch Suchmaschinen zeigt, dass das Wort wichtig ist.',
+                code: `Normaler Text und <strong class="font-bold text-slate-900">fetter wichtiger Text</strong>.`
+            },
+            {
+                id: 'html-br',
+                category: 'html',
+                name: '<br>',
+                type: 'Einzel-Tag (Selbstschließend)',
+                summary: 'Erzeugt einen harten Zeilenumbruch.',
+                why: 'Steht für "Break" (Pause/Umbruch). In HTML werden normale Enter-Tasten im Text-Editor ignoriert. Wenn du eine neue Zeile möchtest, schreibst du <br>.',
+                details: '⚠️ Es gibt KEIN </br>! Weil kein Text dazwischen steht, braucht es kein End-Tag.',
+                code: `Zeile 1: Max Mustermann<br>Zeile 2: Musterstraße 5<br>Zeile 3: 12345 Berlin`
+            },
+            {
+                id: 'html-button',
+                category: 'html',
+                name: '<button>',
+                type: 'Paar-Tag (&lt;button&gt;...&lt;/button&gt;)',
+                summary: 'Ein interaktiver Knopf zum Anklicken.',
+                why: 'Verwendet man für Aktionen, z.B. "Abschicken", "Speichern" oder "Licht einschalten".',
+                details: 'Kann mit JavaScript verbunden werden, um beim Klick etwas auszulösen.',
+                code: `<button onclick="alert('Klick funktioniert!')" class="bg-indigo-600 text-white px-4 py-2 rounded-xl text-xs font-bold hover:bg-indigo-700">Klick Mich!</button>`
+            },
+            {
+                id: 'html-div',
+                category: 'html',
+                name: '<div>',
+                type: 'Container-Tag',
+                summary: 'Ein neutraler Baustein / eine Geschenkbox.',
+                why: 'Steht für "Division" (Abteilung). Hat selbst keine Farbe, dient aber dazu, mehrere Elemente zusammenzufassen.',
+                details: 'Eines der am häufigsten genutzten Tags in der Web-Entwicklung.',
+                code: `<div class="bg-indigo-50 border border-indigo-200 p-3 rounded-xl text-indigo-900 font-medium text-xs">Ich bin eine geschützte Box (div)!</div>`
+            },
+            {
+                id: 'html-em',
+                category: 'html',
+                name: '<em> / <i>',
+                type: 'Paar-Tag (&lt;em&gt;...&lt;/em&gt;)',
+                summary: 'Macht Text kursiv (schräg gedruckt).',
+                why: 'Steht für "Emphasis" (Betonung). Wird genutzt, um Wörter sanft hervorzuheben.',
+                details: 'Der Text neigt sich leicht nach rechts.',
+                code: `Das ist ein <em>kursiver Text</em> für feine Betonungen.`
+            },
+            {
+                id: 'html-h1',
+                category: 'html',
+                name: '<h1> bis <h6>',
+                type: 'Paar-Tag (&lt;h1&gt;...&lt;/h1&gt;)',
+                summary: 'Überschriften von groß (h1) bis klein (h6).',
+                why: 'Steht für "Heading". Gibt der Seite Struktur wie bei einem Zeitungsartikel.',
+                details: 'h1 sollte nur 1x als Haupttitel pro Seite vorkommen!',
+                code: `<h1 class="text-lg font-bold text-slate-900">Haupttitel (H1)</h1><h3 class="text-sm font-semibold text-slate-500">Untertitel (H3)</h3>`
+            },
+            {
+                id: 'html-hr',
+                category: 'html',
+                name: '<hr>',
+                type: 'Einzel-Tag (Selbstschließend)',
+                summary: 'Zieht eine waagerechte Trennlinie.',
+                why: 'Steht für "Horizontal Rule". Trennt Themenblöcke visuell voneinander ab.',
+                details: 'Benötigt ebenfalls kein Schließ-Tag.',
+                code: `Text Oben<hr class="my-2 border-slate-300">Text Unten nach der Trennlinie`
+            },
+            {
+                id: 'html-img',
+                category: 'html',
+                name: '<img>',
+                type: 'Einzel-Tag (Selbstschließend)',
+                summary: 'Bettet ein Bild in die Webseite ein.',
+                why: 'Steht für "Image". Wichtig für Fotos, Logos und Illustrationen.',
+                details: 'Braucht "src" (Bild-Quelle/Pfad) und "alt" (Beschreibung falls das Bild nicht lädt).',
+                code: `<img src="https://placehold.co/150x80/f97316/white?text=Foto" alt="Beispiel" class="rounded-xl shadow-sm">`
+            },
+            {
+                id: 'html-input',
+                category: 'html',
+                name: '<input>',
+                type: 'Einzel-Tag',
+                summary: 'Ein Eingabefeld für den Besucher.',
+                why: 'Damit Benutzer ihren Namen, Passwörter oder E-Mails eingeben können.',
+                details: 'Mit type="text", type="checkbox" oder type="color" verändert man die Art des Feldes.',
+                code: `<input type="text" placeholder="Tippe deinen Namen..." class="border border-slate-300 px-3 py-1.5 rounded-lg text-xs w-full">`
+            },
+            {
+                id: 'html-li',
+                category: 'html',
+                name: '<li>',
+                type: 'Paar-Tag (&lt;li&gt;...&lt;/li&gt;)',
+                summary: 'Ein einzelner Aufzählungspunkt.',
+                why: 'Steht für "List Item". Wird immer innerhalb von <ul> oder <ol> verwendet.',
+                details: 'Stellt Stichpunkte sauber geordnet dar.',
+                code: `<ul class="list-disc pl-4 text-xs space-y-1"><li>Punkt 1</li><li>Punkt 2</li></ul>`
+            },
+            {
+                id: 'html-ol',
+                category: 'html',
+                name: '<ol>',
+                type: 'Paar-Tag (&lt;ol&gt;...&lt;/ol&gt;)',
+                summary: 'Nummerierte Liste (1., 2., 3.).',
+                why: 'Steht für "Ordered List" (Geordnete Liste). Perfekt für Rezepte oder Anleitungen.',
+                details: 'Der Browser zählt die Zahlen automatisch von selbst hoch!',
+                code: `<ol class="list-decimal pl-4 text-xs space-y-1"><li>Schritt: Teig rühren</li><li>Schritt: Backen</li></ol>`
+            },
+            {
+                id: 'html-p',
+                name: '<p>',
+                category: 'html',
+                type: 'Paar-Tag (&lt;p&gt;...&lt;/p&gt;)',
+                summary: 'Ein Textabsatz (Paragraph).',
+                why: 'Der Standard-Befehl für normalen Text. Erzeugt automatisch einen sauberen Abstand nach oben und unten.',
+                details: 'Sollte für Sätze genutzt werden. Für kleine Sprünge im selben Satz nutzt man <br>.',
+                code: `<p class="text-xs text-slate-700 leading-relaxed">Das ist ein sauber geordneter Textabsatz.</p>`
+            },
+            {
+                id: 'html-span',
+                category: 'html',
+                name: '<span>',
+                type: 'Inline-Container',
+                summary: 'Markiert ein einzelnes Wort MITTEN im Text.',
+                why: 'Verändert im Gegensatz zu <div> nicht die Zeile, sondern erlaubt es, einzelne Wörter bunt zu färben.',
+                details: 'Optimal für kleine Text-Farbtupfer.',
+                code: `Hier ist ein <span class="bg-yellow-200 text-yellow-800 px-1 rounded font-bold">gelb markiertes</span> Wort.`
+            },
+            {
+                id: 'html-table',
+                category: 'html',
+                name: '<table>',
+                type: 'Paar-Tag (&lt;table&gt;...&lt;/table&gt;)',
+                summary: 'Erstellt eine Tabelle mit Zeilen und Spalten.',
+                why: 'Für Stundenpläne, Preisvergleiche oder Daten-Übersichten.',
+                details: 'Nutzt <tr> für Zeilen und <td> für Tabellen-Zellen.',
+                code: `<table class="w-full text-xs border border-slate-200"><tr><td class="border p-1 font-bold">Name</td><td class="border p-1">Alter</td></tr><tr><td class="border p-1">Anna</td><td class="border p-1">12</td></tr></table>`
+            },
+            {
+                id: 'html-ul',
+                category: 'html',
+                name: '<ul>',
+                type: 'Paar-Tag (&lt;ul&gt;...&lt;/ul&gt;)',
+                summary: 'Ungeordnete Liste mit Stichpunkten.',
+                why: 'Steht für "Unordered List". Ideal für Einkaufszettel oder Stichpunkt-Listen.',
+                details: 'Enthält immer <li> Elemente.',
+                code: `<ul class="list-disc pl-4 text-xs"><li>Äpfel</li><li>Milch</li></ul>`
+            },
+            {
+                id: 'html-video',
+                category: 'html',
+                name: '<video>',
+                type: 'Paar-Tag',
+                summary: 'Spielt ein Video direkt auf der Webseite ab.',
+                why: 'Ermöglicht es, eigene Erklärvideos ohne fremde Werbeeinblendungen einzubetten.',
+                details: 'Mit "controls" bekommt der Besucher Start- und Stopp-Knöpfe.',
+                code: `<div class="bg-slate-100 p-2 rounded-xl text-center text-xs text-slate-500">🎬 [Video-Player Vorschau]</div>`
+            },
+            {
+                id: 'html-form',
+                category: 'html',
+                name: '<form>',
+                type: 'Paar-Tag',
+                summary: 'Umschließt ein komplettes Eingabe-Formular.',
+                why: 'Bündelt Eingabefelder und Knöpfe, um z.B. eine Nachricht über ein Kontaktformular zu verschicken.',
+                details: 'Sendet Daten an einen Server.',
+                code: `<form onsubmit="return false;" class="space-y-1"><input type="text" placeholder="Suche..." class="border p-1 text-xs rounded"><button class="bg-slate-800 text-white text-xs px-2 py-1 rounded ml-1">Suchen</button></form>`
+            },
+            {
+                id: 'html-header',
+                category: 'html',
+                name: '<header>',
+                type: 'Semantischer Tag',
+                summary: 'Der Kopfbereich der Webseite.',
+                why: 'Enthält meist das Logo, den Seitennamen und das Hauptmenü.',
+                details: 'Hilft Suchmaschinen zu verstehen, wo die Navigation liegt.',
+                code: `<header class="bg-slate-200 p-2 rounded text-xs text-center font-bold">Mein Seiten-Header</header>`
+            },
+            {
+                id: 'html-footer',
+                category: 'html',
+                name: '<footer>',
+                type: 'Semantischer Tag',
+                summary: 'Der Fußbereich ganz unten auf der Seite.',
+                why: 'Enthält Urheberrechte, Impressum oder Kontaktdaten.',
+                details: 'Steht am Ende des <body>.',
+                code: `<footer class="bg-slate-800 text-white p-2 rounded text-xs text-center">© 2026 Mein Name</footer>`
+            },
+
+            // ================= CSS CARDS =================
+            {
+                id: 'css-background-color',
+                category: 'css',
+                name: 'background-color',
+                type: 'CSS Eigenschaft',
+                summary: 'Bestimmt die Hintergrundfarbe eines Bausteins.',
+                why: 'Farben erzeugen Stimmung und heben wichtige Bereiche wie Knöpfe hervor.',
+                details: 'Farben können als Name (red), Hex-Code (#ff0000) oder RGB angegeben werden.',
+                code: `<div style="background-color: #3b82f6;" class="text-white p-2 rounded-lg text-xs text-center font-bold">Blauer Hintergrund</div>`
+            },
+            {
+                id: 'css-border',
+                category: 'css',
+                name: 'border',
+                type: 'CSS Eigenschaft',
+                summary: 'Zieht einen Rahmen um ein Element.',
+                why: 'Grenzt Karten, Eingabefelder oder Fotos sauber ab.',
+                details: 'Syntax: border: [Dicke] [Stil] [Farbe]; (z.B. 2px solid red).',
+                code: `<div style="border: 2px dashed #ef4444;" class="p-2 text-xs text-center font-semibold text-red-600">Gestrichelter roter Rahmen</div>`
+            },
+            {
+                id: 'css-border-radius',
+                category: 'css',
+                name: 'border-radius',
+                type: 'CSS Eigenschaft',
+                summary: 'Rundet die Ecken von Rahmen und Boxen ab.',
+                why: 'Macht das Design freundlicher, moderner und weniger "eckig".',
+                details: 'Höhere Pixel-Werte machen die Ecken runder. 9999px macht einen Kreis!',
+                code: `<div style="border-radius: 16px; background: #e0e7ff;" class="p-2 text-xs text-center text-indigo-700 font-bold">Sanft abgerundete Ecken</div>`
+            },
+            {
+                id: 'css-color',
+                category: 'css',
+                name: 'color',
+                type: 'CSS Eigenschaft',
+                summary: 'Ändert die Textfarbe.',
+                why: 'Ersetzt das alte, veraltete <font color="..."> Tag aus frühem HTML. Textgestaltung gehört heute nur noch in CSS!',
+                details: 'Ändert nur die Schrift, nicht den Hintergrund.',
+                code: `<p style="color: #10b981;" class="font-bold text-xs">Dieser Text ist Smaragd-Grün!</p>`
+            },
+            {
+                id: 'css-cursor',
+                category: 'css',
+                name: 'cursor',
+                type: 'CSS Eigenschaft',
+                summary: 'Verändert das Aussehen des Mauszeigers.',
+                why: 'Zeigt dem Besucher, dass etwas anklickbar ist (z.B. als Hand-Symbol pointer).',
+                details: 'Werte: pointer, wait, crosshair, zoom-in.',
+                code: `<div style="cursor: pointer;" class="bg-amber-100 p-2 text-xs text-center font-bold text-amber-800 rounded-lg">Fahre mit der Maus drüber! 👆</div>`
+            },
+            {
+                id: 'css-display-flex',
+                category: 'css',
+                name: 'display: flex',
+                type: 'CSS Layout-Werkzeug',
+                summary: 'Rückt Elemente mühelos nebeneinander.',
+                why: 'Das beliebteste Werkzeug von Web-Designer! Richtet Bausteine flexibel aus.',
+                details: 'Vermeidet komplizierte alte Layout-Tricks.',
+                code: `<div style="display: flex; gap: 8px;"><div class="bg-blue-200 p-2 text-xs rounded flex-1">Box 1</div><div class="bg-blue-300 p-2 text-xs rounded flex-1">Box 2</div></div>`
+            },
+            {
+                id: 'css-font-family',
+                category: 'css',
+                name: 'font-family',
+                type: 'CSS Typografie',
+                summary: 'Wählt die Schriftart aus.',
+                why: 'Die richtige Schrift verleiht einer Seite Charakter (z.B. modern ohne Serifen oder klassisch).',
+                details: 'Beispiele: Arial, Inter, Georgia, Courier New.',
+                code: `<p style="font-family: 'Courier New', monospace;" class="text-xs font-bold">Klassische Schreibmaschinen-Schrift</p>`
+            },
+            {
+                id: 'css-font-size',
+                category: 'css',
+                name: 'font-size',
+                type: 'CSS Typografie',
+                summary: 'Bestimmt die Größe der Schrift.',
+                why: 'Ersetzt veraltete HTML-Font-Tags. Steuert die Lesbarkeit.',
+                details: 'Angabe meist in Pixel (px) oder rem.',
+                code: `<p style="font-size: 18px;" class="font-bold text-slate-800">18 Pixel große Schrift</p>`
+            },
+            {
+                id: 'css-font-weight',
+                category: 'css',
+                name: 'font-weight',
+                type: 'CSS Typografie',
+                summary: 'Regelt die Schriftdicke (dünn, normal, fett).',
+                why: 'Erlaubt feine Abstufungen der Fettschrift.',
+                details: 'Werte von 100 (sehr dünn) bis 900 (ultra fett). Standard ist 400.',
+                code: `<p style="font-weight: 800;" class="text-xs">Extrem fette Schrift (800)</p>`
+            },
+            {
+                id: 'css-height-width',
+                category: 'css',
+                name: 'width / height',
+                type: 'CSS Dimensionen',
+                summary: 'Bestimmt Breite und Höhe eines Elements.',
+                why: 'Damit Bilder oder Buttons genau die richtige Größe besitzen.',
+                details: 'Kann in px (fest) oder % (relativ zum Bildschirm) angegeben werden.',
+                code: `<div style="width: 100px; height: 40px;" class="bg-purple-500 text-white text-[10px] flex items-center justify-center rounded">100px × 40px</div>`
+            },
+            {
+                id: 'css-margin',
+                category: 'css',
+                name: 'margin',
+                type: 'CSS Abstand (Außen)',
+                summary: 'Erzeugt AUSSEN-Abstand zu Nachbar-Elementen.',
+                why: 'Verhindert, dass Bausteine unangenehm zusammenkleben.',
+                details: 'Schiebt andere Elemente weg.',
+                code: `<div class="bg-slate-200 p-1"><div style="margin: 12px;" class="bg-white p-1 text-xs text-center border">Box mit 12px Außenabstand</div></div>`
+            },
+            {
+                id: 'css-opacity',
+                category: 'css',
+                name: 'opacity',
+                type: 'CSS Transparenz',
+                summary: 'Macht Elemente durchsichtig.',
+                why: 'Für schöne Einblende-Effekte oder inaktive Knöpfe.',
+                details: 'Wert 1 = voll sichtbar, 0 = komplett unsichtbar, 0.5 = halb durchsichtig.',
+                code: `<div style="opacity: 0.4;" class="bg-slate-900 text-white p-2 text-xs text-center rounded">50% Durchsichtig</div>`
+            },
+            {
+                id: 'css-padding',
+                category: 'css',
+                name: 'padding',
+                type: 'CSS Abstand (Innen)',
+                summary: 'Erzeugt INNEN-Abstand zwischen Text und Rand.',
+                why: 'Gibt dem Inhalt in einer Box "Luft zum Atmen".',
+                details: 'Vergrößert die Box nach innen.',
+                code: `<div style="padding: 16px; background: #fef08a;" class="text-xs text-amber-900 font-semibold rounded">Box mit viel Innenabstand</div>`
+            },
+            {
+                id: 'css-box-shadow',
+                category: 'css',
+                name: 'box-shadow',
+                type: 'CSS Effekt',
+                summary: 'Wirft einen Schatten hinter die Box.',
+                why: 'Lässt Elemente dreidimensional wirken, als würden sie über der Seite schweben.',
+                details: 'Sehr beliebt für moderne Karten.',
+                code: `<div style="box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2);" class="bg-white p-2 rounded-xl text-xs text-center font-bold">Schwebende Karte</div>`
+            },
+            {
+                id: 'css-text-align',
+                category: 'css',
+                name: 'text-align',
+                type: 'CSS Ausrichtung',
+                summary: 'Richtet Text links, zentriert oder rechts aus.',
+                why: 'Für schöne Überschriften in der Mitte der Seite.',
+                details: 'Werte: left, center, right, justify.',
+                code: `<p style="text-align: center;" class="text-xs font-bold text-slate-700">Zentrierter Text</p>`
+            },
+            {
+                id: 'css-text-decoration',
+                category: 'css',
+                name: 'text-decoration',
+                type: 'CSS Effekt',
+                summary: 'Unterstreicht Text oder streicht ihn durch.',
+                why: 'Wird oft genutzt, um die Standard-Unterstreichung bei Links zu entfernen (none).',
+                details: 'Werte: underline, line-through, none.',
+                code: `<p style="text-decoration: line-through;" class="text-xs text-slate-400">Durchgestrichener Preis</p>`
+            },
+            {
+                id: 'css-transition',
+                category: 'css',
+                name: 'transition',
+                type: 'CSS Animation',
+                summary: 'Sorgt für weiche, flüssige Übergänge.',
+                why: 'Verhindert abrupte Farbwechsel bei Mausberührungen.',
+                details: 'Macht Hover-Effekte geschmeidig.',
+                code: `<button style="transition: all 0.3s;" class="bg-blue-500 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs">Fahre mit Maus drüber</button>`
+            },
+            {
+                id: 'css-overflow',
+                category: 'css',
+                name: 'overflow',
+                type: 'CSS Steuerung',
+                summary: 'Regelt, was passiert, wenn Inhalt zu groß für die Box ist.',
+                why: 'Erzeugt Scrollbalken innerhalb von kleineren Boxen.',
+                details: 'Werte: hidden (abschneiden), scroll (Scrollbalken zeigen), auto.',
+                code: `<div style="height: 35px; overflow-y: scroll;" class="border p-1 text-[10px]">Zeile 1<br>Zeile 2<br>Zeile 3<br>Zeile 4</div>`
+            },
+            {
+                id: 'css-position',
+                category: 'css',
+                name: 'position',
+                type: 'CSS Positionierung',
+                summary: 'Heftet Elemente an feste Orte.',
+                why: 'Wichtig für Menüleisten, die beim Scrollen oben festkleben bleiben (fixed / sticky).',
+                details: 'Werte: relative, absolute, fixed, sticky.',
+                code: `<div class="bg-slate-100 p-1 text-[10px] text-slate-500">Festgeklebte Positionierung</div>`
+            },
+            {
+                id: 'css-z-index',
+                category: 'css',
+                name: 'z-index',
+                type: 'CSS Ebenen',
+                summary: 'Bestimmt, was VORNE und was HINTEN liegt.',
+                why: 'Wie bei Stapeln von Papier: Höhere Zahlen verdecken niedrigere Zahlen.',
+                details: 'Funktioniert nur bei positionierten Elementen.',
+                code: `<div class="text-[10px] font-bold text-slate-700">Stapelabfolge von Schichten</div>`
+            },
+
+            // ================= JAVASCRIPT CARDS =================
+            {
+                id: 'js-addEventListener',
+                category: 'js',
+                name: 'addEventListener()',
+                type: 'JS Event-Mauslauscher',
+                summary: 'Wartet geduldig auf Klicks oder Tastendrücke.',
+                why: 'Verbindet HTML-Buttons mit JavaScript-Aktionen, ohne HTML durcheinander zu bringen.',
+                details: 'Syntax: element.addEventListener("click", funktion);',
+                code: `<button id="demo-event-btn" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm">Klick mich zum Testen</button>`
+            },
+            {
+                id: 'js-alert',
+                category: 'js',
+                name: 'alert()',
+                type: 'JS Dialogfenster',
+                summary: 'Öffnet ein kleines Hinweis-Fenster im Browser.',
+                why: 'Perfekt für Anfänger, um schnell zu testen, ob ein Skript funktioniert.',
+                details: 'Hält das Programm an, bis der Benutzer auf "OK" klickt.',
+                code: `<button onclick="alert('Hallo! Das ist eine Alert-Nachricht.')" class="bg-amber-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Alert testen</button>`
+            },
+            {
+                id: 'js-console-log',
+                category: 'js',
+                name: 'console.log()',
+                type: 'JS Entwickler-Werkzeug',
+                summary: 'Schreibt geheime Test-Nachrichten in die Entwickler-Konsole.',
+                why: 'Das wichtigste Hilfsmittel für Programmierer zum Fehlersuchen (Debugging).',
+                details: 'Drücke F12 im Browser, um die Konsole zu sehen.',
+                code: `<button onclick="console.log('Test erfolgreich!'); alert('Gehe in die Konsole (F12) um das Ergebnis zu sehen!');" class="bg-slate-800 text-white px-3 py-1.5 rounded-xl text-xs font-bold">In Konsole schreiben</button>`
+            },
+            {
+                id: 'js-getElementById',
+                category: 'js',
+                name: 'document.getElementById()',
+                type: 'JS DOM-Suche',
+                summary: 'Sucht ein HTML-Element anhand seiner eindeutigen ID.',
+                why: 'Bevor JS einen Text ändern kann, muss es das Element auf der Seite greifen.',
+                details: 'Findet genau 1 Baustein.',
+                code: `<div id="mein-ziel" class="font-bold text-xs text-indigo-600 mb-1">Original Text</div><button onclick="document.getElementById('mein-ziel').innerText='Text erfolgreich geändert! 🎉'" class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded text-xs font-bold">Text ändern</button>`
+            },
+            {
+                id: 'js-let-const',
+                category: 'js',
+                name: 'let / const',
+                category: 'js',
+                type: 'JS Variablen-Speicher',
+                summary: 'Speichert Zahlen, Wörter oder Daten im Arbeitsspeicher.',
+                why: 'Wie beschriftete Umzugskartons: const für Dinge, die sich nie ändern; let für Werte, die mitzählen.',
+                details: 'Ersetzt das veraltete "var".',
+                code: `<button onclick="let c=this.nextElementSibling; c.innerText=parseInt(c.innerText)+1" class="bg-amber-100 text-amber-800 border border-amber-300 px-2 py-1 rounded text-xs font-bold">+1 Zählen:</button> <span class="font-bold text-sm ml-1">0</span>`
+            },
+            {
+                id: 'js-if-else',
+                category: 'js',
+                name: 'if ... else',
+                type: 'JS Logik-Entscheidung',
+                summary: 'Prüft Bedingungen: WENN etwas stimmt, mache A, SONST mache B.',
+                why: 'Gibt dem Programm Intelligenz, z.B. für Passworteingaben.',
+                details: 'Bsp: if (alter >= 18) { ... }',
+                code: `<button onclick="let p=prompt('Wie viel ist 2 + 2?'); if(p=='4'){alert('Richtig! 🎉')}else{alert('Falsch! ❌')}" class="bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Mathe-Rätsel testen</button>`
+            },
+            {
+                id: 'js-function',
+                category: 'js',
+                name: 'function()',
+                type: 'JS Baustein',
+                summary: 'Fasst mehrere Befehle zu einem wiederverwendbaren Paket zusammen.',
+                why: 'Vermeidet, dass man denselben Code mehrfach schreiben muss.',
+                details: 'Wird mit einem Namen aufgerufen.',
+                code: `<button onclick="function sagHallo(){alert('Hallo aus der Funktion!')}; sagHallo();" class="bg-emerald-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Funktion ausführen</button>`
+            },
+            {
+                id: 'js-style-change',
+                category: 'js',
+                name: 'element.style',
+                type: 'JS CSS-Steuerung',
+                summary: 'Ändert das Aussehen (CSS) direkt über JavaScript.',
+                why: 'Ermöglicht dynamische Farbwechsel oder das Verstecken von Boxen auf Klick.',
+                details: 'Greift direkt auf CSS-Eigenschaften zu.',
+                code: `<div id="box-style" class="p-2 bg-slate-200 text-xs text-center rounded mb-1">Farbe wechseln</div><button onclick="document.getElementById('box-style').style.backgroundColor='#f43f5e'; document.getElementById('box-style').style.color='white';" class="bg-rose-500 text-white px-2 py-1 rounded text-xs">Rot färben</button>`
+            },
+            {
+                id: 'js-innertext',
+                category: 'js',
+                name: 'innerText / innerHTML',
+                type: 'JS Inhalts-Änderung',
+                summary: 'Tauscht den Text oder den HTML-Inhalt in einer Box aus.',
+                why: 'Bringt dynamische Daten auf den Bildschirm.',
+                details: 'innerText für reinen Text, innerHTML für neue HTML-Tags.',
+                code: `<span id="chg-txt" class="text-xs font-bold">Alte Schrift</span> <button onclick="document.getElementById('chg-txt').innerHTML='<u>Unterstrichen neu!</u>'" class="bg-slate-200 px-2 py-1 rounded text-xs ml-2">HTML tauschen</button>`
+            },
+            {
+                id: 'js-settimeout',
+                category: 'js',
+                name: 'setTimeout()',
+                type: 'JS Timer',
+                summary: 'Wartet eine gewählte Zeit (in Millisekunden), bevor ein Befehl startet.',
+                why: 'Für verzögerte Effekte, Benachrichtigungen oder Stoppuhren.',
+                details: '1000 Millisekunden = 1 Sekunde.',
+                code: `<button onclick="this.innerText='Warte 2 Sekunden...'; setTimeout(() => this.innerText='Fertig! ✅', 2000)" class="bg-purple-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Timer starten</button>`
+            },
+            {
+                id: 'js-math-random',
+                category: 'js',
+                name: 'Math.random()',
+                type: 'JS Zufallsgenerator',
+                summary: 'Generiert eine zufällige Zahl.',
+                why: 'Die Grundlage für Würfelspiele, Zufallsfragen oder Spiele.',
+                details: 'Gibt Zahlen zwischen 0 und 1 zurück.',
+                code: `<button onclick="alert('Gewürfelt: ' + (Math.floor(Math.random()*6)+1))" class="bg-amber-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold">🎲 Würfeln!</button>`
+            },
+            {
+                id: 'js-array',
+                category: 'js',
+                name: 'Array [ ]',
+                type: 'JS Einkaufsliste',
+                summary: 'Speichert eine ganze Liste von Werten in einer einzigen Variable.',
+                why: 'Ideal für Sammlungen wie Namen, Punktestände oder Highscores.',
+                details: 'Zugriff mit einkauf[0] auf den ersten Eintrag.',
+                code: `<button onclick="let fr=['Apfel','Birne','Banane']; alert('Frucht 1: ' + fr[0])" class="bg-teal-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Liste abfragen</button>`
+            },
+            {
+                id: 'js-classList',
+                category: 'js',
+                name: 'classList.toggle()',
+                type: 'JS Schalter',
+                summary: 'Schaltet eine CSS-Klasse ein und aus.',
+                why: 'Perfekt für Dunkelmodus-Schalter (Darkmode) oder aufklappbare Menüs.',
+                details: 'Fügt die Klasse hinzu oder entfernt sie wieder.',
+                code: `<button onclick="this.classList.toggle('bg-slate-900'); this.classList.toggle('text-white')" class="border p-2 rounded text-xs font-bold transition-colors">Dunkelmodus Schalter</button>`
+            },
+            {
+                id: 'js-prompt',
+                category: 'js',
+                name: 'prompt()',
+                type: 'JS Eingabefenster',
+                summary: 'Öffnet ein Fenster, in dem der Besucher Text eintippen kann.',
+                why: 'Fragt den Namen des Benutzers ab.',
+                details: 'Gibt das getippte Wort als Antwort zurück.',
+                code: `<button onclick="let n=prompt('Wie heißt du?'); if(n) alert('Hallo ' + n + '!')" class="bg-indigo-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Name abfragen</button>`
+            },
+            {
+                id: 'js-for-loop',
+                category: 'js',
+                name: 'for Schleife',
+                type: 'JS Wiederholung',
+                summary: 'Wiederholt einen Befehl automatisch x-mal.',
+                why: 'Erspart das hundertfache Abtippen desselben Codes.',
+                details: 'Bsp: for(let i=0; i<5; i++)',
+                code: `<button onclick="let s=''; for(let i=1; i<=3; i++){ s+=i+'... '; } alert(s)" class="bg-slate-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold">3x Zählen</button>`
+            },
+            {
+                id: 'js-fetch',
+                category: 'js',
+                name: 'fetch()',
+                type: 'JS Internet-Anfrage',
+                summary: 'Lädt Daten live aus dem Internet nach (z.B. Wetter).',
+                why: 'Hält Webseiten aktuell, ohne dass die Seite neu geladen werden muss.',
+                details: 'Funktioniert asynchron im Hintergrund.',
+                code: `<button onclick="this.innerText='Lade...'; setTimeout(() => this.innerText='Wetterdaten empfangen! ☀️', 1000)" class="bg-blue-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Wetter-API testen</button>`
+            },
+            {
+                id: 'js-includes',
+                category: 'js',
+                name: 'includes()',
+                type: 'JS Text-Detektiv',
+                summary: 'Prüft, ob ein bestimmtes Wort in einem Text enthalten ist.',
+                why: 'Nützlich für Suchfilter oder E-Mail-Überprüfungen.',
+                details: 'Gibt true (wahr) oder false (falsch) zurück.',
+                code: `<button onclick="alert('Enthält @? ' + 'test@mail.de'.includes('@'))" class="bg-slate-800 text-white px-3 py-1.5 rounded-xl text-xs font-bold">E-Mail Prüfen</button>`
+            },
+            {
+                id: 'js-object',
+                category: 'js',
+                name: 'Object { }',
+                type: 'JS Daten-Akte',
+                summary: 'Bündelt Eigenschaften einer Person oder eines Gegenstands.',
+                why: 'Beispiel: Auto hat Farbe, Marke und Baujahr.',
+                details: 'Syntax: { name: "Anna", alter: 12 }',
+                code: `<button onclick="let p={name:'Anna', alter:12}; alert(p.name + ' ist ' + p.alter)" class="bg-purple-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Akte lesen</button>`
+            },
+            {
+                id: 'js-audio',
+                category: 'js',
+                name: 'Audio()',
+                type: 'JS Sound-Player',
+                summary: 'Spielt Geräusche oder Musik auf Klick ab.',
+                why: 'Für Soundeffekte in Spielen.',
+                details: 'Wird mit .play() gestartet.',
+                code: `<button onclick="alert('🔊 [Soundeffekt abgespielt]')" class="bg-emerald-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Sound testen</button>`
+            },
+            {
+                id: 'js-window-open',
+                category: 'js',
+                name: 'window.open()',
+                type: 'JS Browser-Steuerung',
+                summary: 'Öffnet eine neue Webseite in einem neuen Tab.',
+                why: 'Für Weiterleitungen auf andere Seiten.',
+                details: 'Syntax: window.open("https://...")',
+                code: `<button onclick="window.open('https://wikipedia.org','_blank')" class="bg-blue-500 text-white px-3 py-1.5 rounded-xl text-xs font-bold">Neuen Tab öffnen ↗</button>`
+            }
+        ];
+
+        // Global Application State
+        let currentTab = 'grundlagen';
+        let currentCategory = 'html';
+        let searchQuery = '';
+        let selectedLetter = '';
+        let learnedCards = new Set();
+
+        // On Page Load
+        window.onload = function() {
+            if (window.lucide) {
+                lucide.createIcons();
+            }
+            renderAlphabet();
+            renderCards();
+        };
+
+        // Navigation Switcher
+        function switchTab(tab) {
+            currentTab = tab;
+
+            const secGrundlagen = document.getElementById('sec-grundlagen');
+            const secExplorer = document.getElementById('sec-explorer');
+
+            // Update Header Nav Buttons
+            const tabs = ['grundlagen', 'html', 'css', 'js'];
+            tabs.forEach(t => {
+                const btn = document.getElementById(`nav-btn-${t}`);
+                const mobBtn = document.getElementById(`mob-btn-${t}`);
+                
+                const isActive = (t === tab);
+
+                if (btn) {
+                    if (isActive) {
+                        btn.className = "nav-tab px-5 py-2.5 rounded-xl font-display font-medium text-sm transition-all flex items-center space-x-2 bg-indigo-600 text-white shadow-md shadow-indigo-200";
+                    } else {
+                        btn.className = "nav-tab px-5 py-2.5 rounded-xl font-display font-medium text-sm transition-all flex items-center space-x-2 bg-slate-100 text-slate-700 hover:bg-slate-200";
+                    }
+                }
+
+                if (mobBtn) {
+                    if (isActive) {
+                        mobBtn.className = "px-4 py-2 rounded-lg font-display text-xs font-medium whitespace-nowrap bg-indigo-600 text-white";
+                    } else {
+                        mobBtn.className = "px-4 py-2 rounded-lg font-display text-xs font-medium whitespace-nowrap bg-white border border-slate-200 text-slate-700";
+                    }
+                }
+            });
+
+            if (tab === 'grundlagen') {
+                secGrundlagen.classList.remove('hidden');
+                secExplorer.classList.add('hidden');
+            } else {
+                secGrundlagen.classList.add('hidden');
+                secExplorer.classList.remove('hidden');
+                
+                currentCategory = tab;
+                updateCategoryHeader();
+                renderCards();
+            }
+        }
+
+        // Category Header Customization
+        function updateCategoryHeader() {
+            const iconBg = document.getElementById('cat-icon-bg');
+            const title = document.getElementById('cat-title');
+            const subtitle = document.getElementById('cat-subtitle');
+
+            if (currentCategory === 'html') {
+                iconBg.className = "w-12 h-12 rounded-2xl bg-orange-100 text-orange-600 flex items-center justify-center font-display font-bold text-xl";
+                iconBg.innerHTML = "📄";
+                title.innerText = "HTML Lernkarten";
+                subtitle.innerText = "Das Fundament: Bausteine für Struktur & Inhalt";
+            } else if (currentCategory === 'css') {
+                iconBg.className = "w-12 h-12 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center font-display font-bold text-xl";
+                iconBg.innerHTML = "🎨";
+                title.innerText = "CSS Lernkarten";
+                subtitle.innerText = "Farben, Schriften & tolle Designs gestalten";
+            } else if (currentCategory === 'js') {
+                iconBg.className = "w-12 h-12 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center font-display font-bold text-xl";
+                iconBg.innerHTML = "⚡";
+                title.innerText = "JavaScript Lernkarten";
+                subtitle.innerText = "Befehle für Dynamik & interaktiven Spaß";
+            }
+        }
+
+        // Render Alphabet Quick Selector Bar
+        function renderAlphabet() {
+            const container = document.getElementById('alphabet-container');
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+
+            let html = `<button onclick="filterLetter('')" class="px-2.5 py-1 text-xs font-bold font-display rounded-lg transition-colors ${selectedLetter === '' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">ALLE</button>`;
+
+            alphabet.forEach(l => {
+                const active = selectedLetter === l;
+                html += `<button onclick="filterLetter('${l}')" class="px-2 py-1 text-xs font-bold font-display rounded-lg transition-colors ${active ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}">${l}</button>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function filterLetter(l) {
+            selectedLetter = l;
+            renderAlphabet();
+            renderCards();
+        }
+
+        function handleSearch() {
+            searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+            renderCards();
+        }
+
+        function resetFilters() {
+            searchQuery = '';
+            document.getElementById('search-input').value = '';
+            selectedLetter = '';
+            renderAlphabet();
+            renderCards();
+        }
+
+        function toggleLearned(cardId, event) {
+            event.stopPropagation(); // prevent flipping card when clicking checkbox
+            if (learnedCards.has(cardId)) {
+                learnedCards.delete(cardId);
+            } else {
+                learnedCards.add(cardId);
+            }
+            document.getElementById('learned-count').innerText = learnedCards.size;
+            renderCards();
+        }
+
+        function flipCard(cardId) {
+            const cardInner = document.getElementById(`card-inner-${cardId}`);
+            if (cardInner) {
+                cardInner.classList.toggle('rotate-y-180');
+            }
+        }
+
+        // Main Flashcards Renderer
+        function renderCards() {
+            const grid = document.getElementById('cards-grid');
+            const emptyState = document.getElementById('empty-state');
+
+            // 1. Filter by category
+            let items = flashcardsData.filter(item => item.category === currentCategory);
+
+            // 2. Sort alphabetically
+            items.sort((a, b) => {
+                const cleanA = a.name.replace(/[^a-zA-Z]/g, '');
+                const cleanB = b.name.replace(/[^a-zA-Z]/g, '');
+                return cleanA.localeCompare(cleanB);
+            });
+
+            // 3. Search Filter
+            if (searchQuery) {
+                items = items.filter(item => 
+                    item.name.toLowerCase().includes(searchQuery) ||
+                    item.summary.toLowerCase().includes(searchQuery) ||
+                    item.why.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            // 4. Letter Filter
+            if (selectedLetter) {
+                items = items.filter(item => {
+                    const clean = item.name.replace(/[^a-zA-Z]/g, '').toUpperCase();
+                    return clean.startsWith(selectedLetter);
+                });
+            }
+
+            if (items.length === 0) {
+                grid.innerHTML = '';
+                emptyState.classList.remove('hidden');
+                return;
+            } else {
+                emptyState.classList.add('hidden');
+            }
+
+            // Build Flashcards HTML with 3D Flip capability
+            let cardsHTML = '';
+            items.forEach(item => {
+                const isLearned = learnedCards.has(item.id);
+
+                let badgeColor = '';
+                if (item.category === 'html') badgeColor = 'bg-orange-100 text-orange-700';
+                if (item.category === 'css') badgeColor = 'bg-blue-100 text-blue-700';
+                if (item.category === 'js') badgeColor = 'bg-amber-100 text-amber-800';
+
+                cardsHTML += `
+                    <div class="h-96 perspective-1000 cursor-pointer group" onclick="flipCard('${item.id}')">
+                        <div id="card-inner-${item.id}" class="relative w-full h-full transform-style-3d shadow-sm group-hover:shadow-md rounded-3xl transition-all">
+                            
+                            <!-- VORDERSEITE (Front Side) -->
+                            <div class="absolute inset-0 w-full h-full bg-white border ${isLearned ? 'border-emerald-400 bg-emerald-50/20' : 'border-slate-200'} rounded-3xl p-6 flex flex-col justify-between backface-hidden space-y-4">
+                                <div class="space-y-3">
+                                    <!-- Header Badge & Name -->
+                                    <div class="flex items-start justify-between gap-2">
+                                        <h3 class="font-display font-bold text-2xl text-slate-900 code-font">
+                                            ${escapeHtml(item.name)}
+                                        </h3>
+                                        <button onclick="toggleLearned('${item.id}', event)" title="Als gelernt markieren" class="p-1.5 rounded-xl transition-colors ${isLearned ? 'bg-emerald-500 text-white' : 'bg-slate-100 text-slate-400 hover:text-emerald-600'}">
+                                            <i data-lucide="check" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+
+                                    <span class="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider ${badgeColor}">
+                                        ${item.type}
+                                    </span>
+
+                                    <p class="font-display font-semibold text-slate-800 text-sm leading-snug">
+                                        ${item.summary}
+                                    </p>
+
+                                    <!-- Why / Merkhilfe -->
+                                    <div class="bg-slate-50 border-l-4 border-indigo-500 p-3 rounded-r-xl space-y-1">
+                                        <span class="text-xs font-bold text-indigo-700 font-display flex items-center gap-1">
+                                            💡 Warum braucht man das?
+                                        </span>
+                                        <p class="text-xs text-slate-600 leading-relaxed">
+                                            ${item.why}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Flip CTA footer -->
+                                <div class="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-indigo-600 font-display font-bold">
+                                    <span>Live-Beispiel sehen</span>
+                                    <span class="flex items-center gap-1">Umklappen 🔄</span>
+                                </div>
+                            </div>
+
+                            <!-- RÜCKSEITE (Back Side with Live Preview) -->
+                            <div class="absolute inset-0 w-full h-full bg-slate-900 text-white rounded-3xl p-6 flex flex-col justify-between backface-hidden rotate-y-180 space-y-3">
+                                <div class="space-y-3">
+                                    <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+                                        <span class="text-xs font-bold text-indigo-400 font-display uppercase tracking-wider">Live-Vorschau & Code</span>
+                                        <span class="text-[10px] bg-slate-800 text-slate-400 px-2 py-0.5 rounded">Rückseite</span>
+                                    </div>
+
+                                    <!-- Interactive Result Box -->
+                                    <div class="space-y-1">
+                                        <span class="text-[10px] uppercase font-bold text-slate-400">So sieht es im Browser aus:</span>
+                                        <div class="p-3 bg-white text-slate-900 rounded-xl text-xs overflow-hidden" onclick="event.stopPropagation()">
+                                            ${item.code}
+                                        </div>
+                                    </div>
+
+                                    <p class="text-xs text-slate-400 leading-relaxed">
+                                        ${item.details}
+                                    </p>
+                                </div>
+
+                                <!-- Flip Back CTA -->
+                                <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-indigo-400 font-display font-bold">
+                                    <span>Zurück zur Erklärung</span>
+                                    <span>🔄 Umdrehen</span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                `;
+            });
+
+            grid.innerHTML = cardsHTML;
+            if (window.lucide) lucide.createIcons();
+        }
+
+        // Helper to safely display tags like <a> in titles
+        function escapeHtml(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+    </script>
+</body>
+</html>
